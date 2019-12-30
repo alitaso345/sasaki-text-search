@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -84,6 +85,9 @@ func searchText(searchWord string) (results []string) {
 }
 
 func sendingMessages(lines []string) (messages []linebot.SendingMessage) {
+	firstMessage := strconv.Itoa(len(lines)) + "件の台詞がヒットしました"
+	lines = append(lines, firstMessage)
+
 	const maxMessageSize = 5
 	messages = make([]linebot.SendingMessage, maxMessageSize)
 
