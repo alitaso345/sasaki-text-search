@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -35,6 +37,7 @@ func main() {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
 					results := searchText(message.Text)
+					shuffle(results)
 					messages := sendingMessages(results)
 
 					if _, err = bot.ReplyMessage(event.ReplyToken, messages...).Do(); err != nil {
@@ -93,4 +96,13 @@ func sendingMessages(lines []string) (messages []linebot.SendingMessage) {
 		messageLength = len(lines)
 	}
 	return messages[:messageLength]
+}
+
+func shuffle(data []string) {
+	rand.Seed(time.Now().UnixNano())
+	n := len(data)
+	for i := n - 1; i >= 0; i-- {
+		j := rand.Intn(i + 1)
+		data[i], data[j] = data[j], data[i]
+	}
 }
