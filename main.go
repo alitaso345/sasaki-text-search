@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -32,7 +34,8 @@ func main() {
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
+					results := searchText(message.Text)
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(results[0])).Do(); err != nil {
 						log.Print(err)
 					}
 				case *linebot.StickerMessage:
@@ -49,4 +52,28 @@ func main() {
 	if err := http.ListenAndServe(":"+os.Getenv("PORT"), nil); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func searchText(searchWord string) (results []string) {
+	file, err := os.Open("./sasakiazusa.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	sc := bufio.NewScanner(file)
+
+	for i := 1; sc.Scan(); i++ {
+		if err := sc.Err(); err != nil {
+			log.Fatal(err)
+			break
+		}
+
+		text := sc.Text()
+		if strings.Contains(text, searchWord) {
+			results = append(results, text)
+		}
+	}
+
+	return results
 }
