@@ -35,7 +35,14 @@ func main() {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
 					results := searchText(message.Text)
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(results[0])).Do(); err != nil {
+					messages := make([]linebot.SendingMessage, 0)
+
+					for i := 0; i < len(results); i++ {
+						messages = append([]linebot.SendingMessage{linebot.NewTextMessage(results[i])}, messages...)
+					}
+
+					const maxMessageSize = 5
+					if _, err = bot.ReplyMessage(event.ReplyToken, messages[:maxMessageSize]...).Do(); err != nil {
 						log.Print(err)
 					}
 				case *linebot.StickerMessage:
