@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "Nwhuh+zcPeSwq1SxEMUzgYgSZMY=",
+			"path": "github.com/line/line-bot-sdk-go/linebot",
+			"revision": "033cedc89904ff80af7b987de3c16c34c402bd6a",
+			"revisionTime": "2019-12-29T01:28:31Z"
+		}
+	],
+	"rootPath": "github.com/alitaso345-sandbox/rikka-scripts"
+}
